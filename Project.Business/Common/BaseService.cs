@@ -1,48 +1,59 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Project.Business.Common.Data;
 using Project.Domain;
 
 namespace Project.Business.Common;
 
-public class BaseService<TEntity>(DbContext context) where TEntity : BaseEntity
+public class BaseService<TEntity>(IContext context) where TEntity : BaseEntity
 {
-    private readonly DbContext _context = context;
-
-    public async virtual Task<TEntity> CreateAsync(TEntity entity)
+    protected async Task CreateAsync(TEntity entity)
     {
-        _context!.Set<TEntity>().Add(entity);
-        await _context.SaveChangesAsync();
+        await context.AddEntityAsync(entity);
+        await context.SaveChangesAsync();
+    }
+
+    protected async Task<TEntity> CreateIfNotExistsAsync(TEntity entity)
+    {
+        if (context.QuerySet<TEntity>().Any(a => a.Id == entity.Id))
+        {
+            return entity;
+        }
+
+        await context!.AddEntityAsync(entity);
+        await context.SaveChangesAsync();
         return entity;
     }
 
-    public async virtual Task<TEntity> UpdateAsync(TEntity entity)
+    protected async Task<TEntity> UpdateAsync(TEntity entity)
     {
-        _context!.Set<TEntity>().Update(entity);
-        await _context.SaveChangesAsync();
+        await context!.UpdateEntityAsync(entity);
+        await context.SaveChangesAsync();
         return entity;
     }
 
-    public async virtual Task<bool> DeleteAsync(TEntity entity)
+    protected async Task<bool> DeleteAsync(TEntity entity)
     {
-        _context!.Set<TEntity>().Remove(entity);
-        var result = await _context.SaveChangesAsync();
+        await context!.RemoveEntityAsync(entity);
+        var result = await context.SaveChangesAsync();
         return result > 0;
     }
 
-    public virtual async Task<bool> DeleteByIdAsync(Guid id)
+    protected async Task<bool> DeleteByIdAsync(Guid id)
     {
-        var entity = await _context!.Set<TEntity>().FindAsync(id);
-        _context!.Set<TEntity>().Update(entity);
-        var result = await _context.SaveChangesAsync();
+        var entity = await context!.QuerySet<TEntity>().FirstOrDefaultAsync(a => a.Id == id);
+        if (entity == null) return false;
+        await context!.RemoveEntityAsync(entity);
+        var result = await context.SaveChangesAsync();
         return result > 0;
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(Guid id)
+    protected async Task<TEntity?> GetByIdAsync(Guid id)
     {
-        return await _context!.Set<TEntity>().FindAsync(id);
+        return await context!.QuerySet<TEntity>().FirstOrDefaultAsync(a => a.Id == id);
     }
 
-    public virtual IQueryable<TEntity> GetAll()
+    protected IQueryable<TEntity> GetAll()
     {
-        return _context!.Set<TEntity>().AsQueryable();
+        return context!.QuerySet<TEntity>();
     }
 }

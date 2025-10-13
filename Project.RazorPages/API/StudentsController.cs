@@ -12,23 +12,9 @@ public class StudentsController(StudentServices studentServices) : ControllerBas
     private readonly StudentServices _studentServices = studentServices;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> Get(string name)
     {
-        var students = await _studentServices.GetAll().ToListAsync();
-        return Ok(students);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
-    {
-        var students = await _studentServices.GetByIdAsync(id);
-        return Ok(students);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Student student)
-    {
-        var students = await _studentServices.CreateAsync(student);
+        var students = await _studentServices.GetStudentsByName(name);
         return Ok(students);
     }
 }

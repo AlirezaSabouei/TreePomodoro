@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Domain;
+﻿namespace Project.Domain;
 
 public class BaseEntity
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public DateTimeOffset CreateDate { get; set; }
+    public DateTimeOffset UpdateDate { get; set; }
 }

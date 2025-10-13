@@ -7,7 +7,7 @@ using Project.Domain.Entities;
 
 namespace Project.Business.Common.Data;
 
-public class Context(DbContextOptions<Context> options) : IdentityDbContext(options)
+public class Context(DbContextOptions<Context> options) : IdentityDbContext(options), IContext
 {
     // Example table
     public DbSet<Student> Students { get; set; }

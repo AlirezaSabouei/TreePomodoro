@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage;
 using Project.Domain;
 using Project.Domain.Entities;
+using Project.Domain.Entities.Gardens;
 
 namespace Project.Business.Common.Data;
 
@@ -11,6 +12,8 @@ public class Context(DbContextOptions<Context> options) : IdentityDbContext(opti
 {
     // Example table
     public DbSet<Student> Students { get; set; }
+    public DbSet<Garden> Gardens { get; set; }
+    public DbSet<Tree> Trees { get; set; }
 
     public async Task AddEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
     {
@@ -34,33 +37,35 @@ public class Context(DbContextOptions<Context> options) : IdentityDbContext(opti
         return base.Set<TEntity>();
     }
 
-    public Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync()
     {
-        var utcNow = DateTimeOffset.UtcNow;
-
-        foreach (var entry in ChangeTracker.Entries<BaseEntity>())
-        {
-            if (entry.State == EntityState.Added)
-            {
-                entry.Entity.CreateDate = utcNow;
-                entry.Entity.UpdateDate = utcNow;
-            }
-            else if (entry.State == EntityState.Modified)
-            {
-                entry.Entity.UpdateDate = utcNow;
-                
-                // prevent overwriting CreatedDate on updates
-                entry.Property(e => e.CreateDate).IsModified = false;
-            }
-        }
-        return base.SaveChangesAsync();
+        // var utcNow = DateTimeOffset.UtcNow;
+        //
+        // foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+        // {
+        //     if (entry.State == EntityState.Added)
+        //     {
+        //         entry.Entity.CreateDate = utcNow;
+        //         entry.Entity.UpdateDate = utcNow;
+        //     }
+        //     else if (entry.State == EntityState.Modified)
+        //     {
+        //         entry.Entity.UpdateDate = utcNow;
+        //         
+        //         // prevent overwriting CreatedDate on updates
+        //         entry.Property(e => e.CreateDate).IsModified = false;
+        //     }
+        // }
+        
+        return await base.SaveChangesAsync();
+        
     }
 
-    // protected override void OnModelCreating(ModelBuilder builder)
-    // {
-    //     builder.Entity<Sample>().OwnsOne(a => a.Cost, ConfigureUnitCost);
-    //     base.OnModelCreating(builder);
-    // }
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<Garden>().HasMany(a => a.Trees).WithOne(a=>a.Garden).IsRequired();
+        base.OnModelCreating(builder);
+    }
 
     // private void ConfigureSampleCost(OwnedNavigationBuilder<Sample, Cost> ownedNavigationBuilder)
     // {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Project.Business;
 using Project.Business.Common.Data;
 
 namespace Project.RazorPages
@@ -28,8 +29,15 @@ namespace Project.RazorPages
             builder.Services.AddSwaggerGen();
 
             //DI
+            var signedUser = new SignedUser()
+            {
+                Name = "Alireza",
+                UserId = Guid.NewGuid()
+            };
+            builder.Services.AddScoped<SignedUser>(_ => signedUser);
             builder.Services.AddScoped<Business.Services.StudentServices>();
-            builder.Services.AddScoped<DbContext, Context>();
+            builder.Services.AddScoped<Business.Services.Gardens.GardenServices>();
+            builder.Services.AddScoped<IContext, Context>();
             //DI
 
             var app = builder.Build();

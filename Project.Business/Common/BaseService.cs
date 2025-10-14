@@ -26,7 +26,7 @@ public class BaseService<TEntity>(IContext context) where TEntity : BaseEntity
 
     protected async Task<TEntity> UpdateAsync(TEntity entity)
     {
-        await context!.UpdateEntityAsync(entity);
+        //await context!.UpdateEntityAsync(entity);
         await context.SaveChangesAsync();
         return entity;
     }

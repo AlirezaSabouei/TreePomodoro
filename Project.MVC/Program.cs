@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Project.Business;
 using Project.Business.Common.Data;
 using Project.MVC.Data;
 
@@ -17,7 +18,7 @@ public class Program
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<Context>();
         builder.Services.AddControllersWithViews();
 
         // Add Swagger services
@@ -25,8 +26,15 @@ public class Program
         builder.Services.AddSwaggerGen();
         
         //DI
+        var signedUser = new SignedUser()
+        {
+            Name = "Alireza",
+            UserId = new Guid("3D029536-EFC2-479E-A732-BA3A9091890E")
+        };
+        builder.Services.AddScoped<SignedUser>(_ => signedUser);
         builder.Services.AddScoped<Business.Services.StudentServices>();
-        builder.Services.AddScoped<DbContext, Context>();
+        builder.Services.AddScoped<Business.Services.Gardens.GardenServices>();
+        //builder.Services.AddScoped<DbContext, Context>();
         //DI
         
         var app = builder.Build();
@@ -64,6 +72,15 @@ public class Program
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
         app.MapRazorPages();
+        
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider
+                .GetRequiredService<Context>(); // Replace YourDbContext with your actual context class
+        
+            // Apply any pending migrations
+            dbContext.Database.Migrate();
+        }
 
         app.Run();
     }

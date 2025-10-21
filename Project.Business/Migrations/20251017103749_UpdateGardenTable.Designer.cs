@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project.Business.Common.Data;
 
@@ -10,9 +11,11 @@ using Project.Business.Common.Data;
 namespace Project.Business.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20251017103749_UpdateGardenTable")]
+    partial class UpdateGardenTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -239,7 +242,7 @@ namespace Project.Business.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Gardens", (string)null);
+                    b.ToTable("Gardens");
                 });
 
             modelBuilder.Entity("Project.Domain.Entities.Gardens.Tree", b =>
@@ -250,6 +253,9 @@ namespace Project.Business.Migrations
 
                     b.Property<DateTimeOffset>("CreateDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("Finished")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("GardenId")
                         .HasColumnType("TEXT");
@@ -267,7 +273,7 @@ namespace Project.Business.Migrations
 
                     b.HasIndex("GardenId");
 
-                    b.ToTable("Trees", (string)null);
+                    b.ToTable("Trees");
                 });
 
             modelBuilder.Entity("Project.Domain.Entities.Student", b =>
@@ -288,7 +294,7 @@ namespace Project.Business.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

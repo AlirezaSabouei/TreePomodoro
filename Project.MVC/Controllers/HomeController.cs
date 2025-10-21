@@ -1,26 +1,37 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Project.Business.Services.Gardens;
 using Project.MVC.Models;
 
 namespace Project.MVC.Controllers;
 
-public class HomeController : Controller
+public class HomeController(GardenServices gardenServices, ILogger<HomeController> logger) : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
-    {
-        _logger = logger;
-    }
-
+    [HttpGet]
     public IActionResult Index()
     {
         return View();
     }
-
-    public IActionResult Privacy()
+    
+    public async Task<IActionResult> RefreshGarden(RequestType requestType)
     {
-        return View();
+        await gardenServices.GetOrCreateGardenAsync();
+        switch (requestType)
+        {
+            case RequestType.PlantASeed:
+                await gardenServices.PlantASeedAsync();
+                break;
+            case RequestType.KillTheSeed:
+                await gardenServices.KillATreeAsync();
+                break;
+        }
+        return PartialView("_garden", gardenServices.Garden);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> LoadGarden(RequestType requestType)
+    {
+        return ViewComponent("Garden", new { requestType = requestType });
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

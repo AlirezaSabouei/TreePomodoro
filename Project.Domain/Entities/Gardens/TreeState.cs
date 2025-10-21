@@ -4,5 +4,5 @@ public enum TreeState
 {
     Green,
     Dry,
-    Growing
+    Seed
 }

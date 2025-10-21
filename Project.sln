@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Business", "Project
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Domain", "Project.Domain\Project.Domain.csproj", "{632D9F4C-8D3C-46B7-84AD-BF1032FE4AAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.RazorPages", "Project.RazorPages\Project.RazorPages.csproj", "{8F86C976-E09B-4AFB-8AEC-6AB9178D7CF5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.MVC", "Project.MVC\Project.MVC.csproj", "{E475AAA8-35A3-4295-930C-59A879D97C9F}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{632D9F4C-8D3C-46B7-84AD-BF1032FE4AAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{632D9F4C-8D3C-46B7-84AD-BF1032FE4AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{632D9F4C-8D3C-46B7-84AD-BF1032FE4AAB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8F86C976-E09B-4AFB-8AEC-6AB9178D7CF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F86C976-E09B-4AFB-8AEC-6AB9178D7CF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F86C976-E09B-4AFB-8AEC-6AB9178D7CF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F86C976-E09B-4AFB-8AEC-6AB9178D7CF5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E475AAA8-35A3-4295-930C-59A879D97C9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E475AAA8-35A3-4295-930C-59A879D97C9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E475AAA8-35A3-4295-930C-59A879D97C9F}.Release|Any CPU.ActiveCfg = Release|Any CPU

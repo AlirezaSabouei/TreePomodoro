@@ -1,0 +1,130 @@
+@using Project.Domain.Entities.Gardens
+@model Project.Domain.Entities.Gardens.Garden
+
+@{
+    Layout = null;
+}
+
+@{
+    int index = 0;
+
+    string GetClass()
+    {
+        var tree = Model.Trees.FirstOrDefault(a => a.Index == index);
+        return tree is null ? "" : tree.TreeState.ToString().ToLower();
+    }
+}
+
+@Html.HiddenFor(a => a.GardenState)
+@Html.HiddenFor(a => a.RemainigSeconds)
+
+<div class="col-12">
+    <h1>Tree Pomodoro!</h1>
+    <p class="lead">Start creating your garden!.</p>
+</div>
+
+<table id="garden" class="table table-bordered">
+    <tbody>
+    @for (var i = 0; i < 5; i++)
+    {
+        <tr>
+            @for (var j = 0; j < 5; j++)
+            {
+                var treeType = GetClass();
+                <td class="@treeType">
+                    @if (treeType == TreeState.Seed.ToString().ToLower())
+                    {
+                        <span id="timer" class="badge badge-light"></span>
+                    }
+                </td>
+                index++;
+            }
+        </tr>
+    }
+    </tbody>
+</table>
+<button id="btnPlant" type="button" class="btn btn-success">
+    Plant A Tree!
+</button>
+<script>
+    var gardenState;
+    var remainingSeconds = 0;
+    
+    $(document).ready(function () {
+        SetGardenStateAndRemainingSeconds();
+        SetButtonTextBasedOnGardenState();
+        if (gardenState === '@GardenState.GrowingATree')
+        {
+            StartTimer();
+        }        
+    });
+
+    function SetGardenStateAndRemainingSeconds() {
+        gardenState = $('#GardenState').val();
+        remainingSeconds = $('#RemainigSeconds').val();
+    }
+
+    function SetButtonTextBasedOnGardenState() {
+        if (gardenState === '@GardenState.GrowingATree') {
+            $('#btnPlant').text('Cancel Planting');
+        } else {
+            $('#btnPlant').text('Plant A Tree!');
+        }
+    }
+
+    $("#btnPlant").on('click', function () {
+        if (gardenState === '@GardenState.GrowingATree') {
+            RefreshGarden('@((int)RequestType.KillTheSeed)');
+        } else {
+            RefreshGarden('@((int)RequestType.PlantASeed)');
+        }
+    });
+
+    function RefreshGarden(requestType, callback) {
+        $('#garden-container').load('@Url.Action("LoadGarden", "Home")?requestType=' + requestType, function () {
+            if (typeof callback === 'function') {
+                callback(); // run callback after load completes
+            }
+        });
+    }
+
+    function StartTimer() {
+        let timeLeftInSeconds = remainingSeconds;
+        const timerDisplay = document.getElementById('timer');
+
+        const countdownInterval = setInterval(function () {
+            if (timeLeftInSeconds <= 0) {
+                clearInterval(countdownInterval);
+                beep(300, 600);
+                RefreshGarden('@((int)RequestType.Refresh)');
+                return;
+            }
+            const minutes = Math.floor(timeLeftInSeconds / 60);
+            let seconds = timeLeftInSeconds % 60;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            timerDisplay.textContent = `${minutes}:${seconds}`;
+
+            timeLeftInSeconds--;
+        }, 1000);
+    }
+
+    function beep(duration = 200, frequency = 440, volume = 1, type = 'sine') {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.type = type;       // sine, square, sawtooth, triangle
+        oscillator.frequency.value = frequency;
+        gainNode.gain.value = volume;
+
+        oscillator.start();
+        setTimeout(() => {
+            oscillator.stop();
+            audioCtx.close();
+        }, duration);
+    }
+</script>

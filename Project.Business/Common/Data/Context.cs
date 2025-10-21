@@ -39,23 +39,23 @@ public class Context(DbContextOptions<Context> options) : IdentityDbContext(opti
 
     public async Task<int> SaveChangesAsync()
     {
-        // var utcNow = DateTimeOffset.UtcNow;
-        //
-        // foreach (var entry in ChangeTracker.Entries<BaseEntity>())
-        // {
-        //     if (entry.State == EntityState.Added)
-        //     {
-        //         entry.Entity.CreateDate = utcNow;
-        //         entry.Entity.UpdateDate = utcNow;
-        //     }
-        //     else if (entry.State == EntityState.Modified)
-        //     {
-        //         entry.Entity.UpdateDate = utcNow;
-        //         
-        //         // prevent overwriting CreatedDate on updates
-        //         entry.Property(e => e.CreateDate).IsModified = false;
-        //     }
-        // }
+        var now = DateTime.Now;
+        
+        foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreateDate = now;
+                entry.Entity.UpdateDate = now;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.UpdateDate = now;
+                
+                // prevent overwriting CreatedDate on updates
+                entry.Property(e => e.CreateDate).IsModified = false;
+            }
+        }
         
         return await base.SaveChangesAsync();
         

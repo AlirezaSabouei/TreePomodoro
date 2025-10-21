@@ -65,6 +65,15 @@ namespace Project.RazorPages
             app.UseAuthorization();
 
             app.MapRazorPages();
+            
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider
+                    .GetRequiredService<Context>(); // Replace YourDbContext with your actual context class
+        
+                // Apply any pending migrations
+                dbContext.Database.Migrate();
+            }
 
             app.Run();
         }

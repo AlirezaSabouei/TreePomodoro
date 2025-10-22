@@ -4,5 +4,5 @@ public class SignedUser
 {
     public Guid UserId { get; set; }
     public string Name { get; set; }
-    public int TreeGrowthTimeInMinutes { get; set; } = 1;
+    public int TreeGrowthTimeInSeconds { get; set; } = 1500;
 }

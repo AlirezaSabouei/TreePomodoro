@@ -11,8 +11,8 @@ using Project.Business.Common.Data;
 namespace Project.Business.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20251017103749_UpdateGardenTable")]
-    partial class UpdateGardenTable
+    [Migration("20251021141807_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -222,7 +222,7 @@ namespace Project.Business.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreateDate")
+                    b.Property<DateTime>("CreateDate")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Day")
@@ -231,7 +231,7 @@ namespace Project.Business.Migrations
                     b.Property<int>("Month")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("UpdateDate")
+                    b.Property<DateTime>("UpdateDate")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
@@ -251,11 +251,8 @@ namespace Project.Business.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreateDate")
+                    b.Property<DateTime>("CreateDate")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("Finished")
-                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("GardenId")
                         .HasColumnType("TEXT");
@@ -266,7 +263,7 @@ namespace Project.Business.Migrations
                     b.Property<int>("TreeState")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("UpdateDate")
+                    b.Property<DateTime>("UpdateDate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -282,14 +279,14 @@ namespace Project.Business.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreateDate")
+                    b.Property<DateTime>("CreateDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("UpdateDate")
+                    b.Property<DateTime>("UpdateDate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

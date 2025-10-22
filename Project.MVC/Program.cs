@@ -1,9 +1,4 @@
 using System.Reflection;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Project.Business;
-using Project.Business.Common.Data;
-using Project.MVC.Data;
 using Project.MVC.ServiceConfigurations;
 
 namespace Project.MVC;
@@ -40,8 +35,6 @@ public class Program
 
         app.UseRouting();
 
-
-
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -56,16 +49,13 @@ public class Program
         // Get the current assembly
         var assembly = Assembly.GetExecutingAssembly();
 
-        // Find all types assignable to MyClass (including MyClass itself)
+        // Find all types assignable to ServiceConfigurationBase (including ServiceConfigurationBase itself)
         var types = assembly.GetTypes()
             .Where(t => typeof(ServiceConfigurationBase).IsAssignableFrom(t) && !t.IsAbstract);
 
         foreach (var type in types)
         {
-            // Create an instance
             var instance = Activator.CreateInstance(type) as ServiceConfigurationBase;
-
-            // Call method X
             instance?.RegisterService(builder);
         }
     }
@@ -75,16 +65,13 @@ public class Program
         // Get the current assembly
         var assembly = Assembly.GetExecutingAssembly();
 
-        // Find all types assignable to MyClass (including MyClass itself)
+        // Find all types assignable to ServiceConfigurationBase (including ServiceConfigurationBase itself)
         var types = assembly.GetTypes()
             .Where(t => typeof(ServiceConfigurationBase).IsAssignableFrom(t) && !t.IsAbstract);
 
         foreach (var type in types)
         {
-            // Create an instance
             var instance = Activator.CreateInstance(type) as ServiceConfigurationBase;
-
-            // Call method X
             instance?.UseService(app);
         }
     }

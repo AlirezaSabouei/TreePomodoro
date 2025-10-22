@@ -219,7 +219,7 @@ namespace Project.Business.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreateDate")
+                    b.Property<DateTime>("CreateDate")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Day")
@@ -228,7 +228,7 @@ namespace Project.Business.Migrations
                     b.Property<int>("Month")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("UpdateDate")
+                    b.Property<DateTime>("UpdateDate")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
@@ -239,7 +239,7 @@ namespace Project.Business.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Gardens", (string)null);
+                    b.ToTable("Gardens");
                 });
 
             modelBuilder.Entity("Project.Domain.Entities.Gardens.Tree", b =>
@@ -248,7 +248,7 @@ namespace Project.Business.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreateDate")
+                    b.Property<DateTime>("CreateDate")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("GardenId")
@@ -260,14 +260,14 @@ namespace Project.Business.Migrations
                     b.Property<int>("TreeState")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("UpdateDate")
+                    b.Property<DateTime>("UpdateDate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GardenId");
 
-                    b.ToTable("Trees", (string)null);
+                    b.ToTable("Trees");
                 });
 
             modelBuilder.Entity("Project.Domain.Entities.Student", b =>
@@ -276,19 +276,19 @@ namespace Project.Business.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreateDate")
+                    b.Property<DateTime>("CreateDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("UpdateDate")
+                    b.Property<DateTime>("UpdateDate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

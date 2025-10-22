@@ -7,7 +7,8 @@ public class EntityServicesServiceConfiguration : ServiceConfigurationBase
         var signedUser = new Business.SignedUser()
         {
             UserId = Guid.Empty,
-            Name = "Parisa"
+            Name = "Parisa",
+            TreeGrowthTimeInSeconds = 1500
         };
         builder.Services.AddScoped<Business.SignedUser>(_ => signedUser);
         builder.Services.AddScoped<Business.Services.StudentServices>();

@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Alireza Sabouei",
+  "classifications": [ "Web", "API" ],
+  "identity": "DotNetStarter",
+  "name": ".NET Starter Template Using Clean Architecture And CQRS",
+  "shortName": "starter",
+  "sourceName": "DotNetStarter",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  }
+}

@@ -1,2 +1,2 @@
-# DotNetStarter
-A clean architecture / CQRS template for dot net
+# SimpleDotNetStarter
+Simple Boilerplate for .Net projects

@@ -1,4 +1,4 @@
-namespace Project.MVC.Models;
+namespace MVC.Models;
 
 public enum RequestType
 {

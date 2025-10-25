@@ -16,28 +16,28 @@ public static class ConfigureServices
 {
     public static void AddApplicationServices(this IServiceCollection services)
     {
-        services.AddScoped<IRequestHandler<CreateStudentRequest,Student>,CreateStudentRequestHandler>();
+        services.AddScoped<IRequestHandler<CreateStudentRequest, Student>, CreateStudentRequestHandler>();
         services.AddScoped<INotificationHandler<StudentCreatedEvent>, StudentCreatedEventHandler>();
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        
+        services.AddScoped<SignedUser>(_ => new SignedUser());
+
         //Auto Mapper Configuration
         services.AddAutoMapper(cfg =>
         {
             cfg.AddMaps(Assembly.GetExecutingAssembly()); // scans for Profile classes
         });
-        
+
         //MediatR Configuration
-        services.AddMediatR(cfg => {
+        services.AddMediatR(cfg =>
+        {
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
             //cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-           // cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
+            // cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
         });
-        
+
         //In-Memory Caching Configuration
         services.AddMemoryCache();
     }
-    
-
 }

@@ -1,12 +1,13 @@
-@using Project.Domain.Entities.Gardens
-@model Project.Domain.Entities.Gardens.Garden
+@using Domain.Entities.Gardens
+
+@model Domain.Entities.Gardens.Garden
 
 @{
     Layout = null;
 }
 
 @{
-    int index = 0;
+    var index = 0;
 
     string GetClass()
     {
@@ -16,7 +17,7 @@
 }
 
 @Html.HiddenFor(a => a.GardenState)
-@Html.HiddenFor(a => a.RemainigSeconds)
+@Html.HiddenFor(a => a.RemainingSeconds)
 
 <div class="col-12">
     <h1>Tree Pomodoro!</h1>

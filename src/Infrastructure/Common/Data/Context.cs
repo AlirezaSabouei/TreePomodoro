@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Domain.Entities.Gardens;
 
 namespace Infrastructure.Common.Data;
 
@@ -12,6 +13,7 @@ public class Context(DbContextOptions<Context> options, IMediator mediator) : Id
 {
     // Example table
     public DbSet<Student> Students { get; set; }
+    public DbSet<Garden> Gardens { get; set; }
     
     public async Task SaveChangesAsync()
     {

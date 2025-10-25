@@ -1,4 +1,4 @@
-namespace Project.Domain.Entities.Gardens;
+namespace Domain.Entities.Gardens;
 
 public enum TreeState
 {

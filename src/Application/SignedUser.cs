@@ -1,4 +1,4 @@
-namespace Project.Business;
+namespace Application;
 
 public class SignedUser
 {

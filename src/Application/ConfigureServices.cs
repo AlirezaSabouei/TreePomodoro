@@ -1,14 +1,10 @@
 ﻿using System.Reflection;
 using Application.Common.Behaviours;
-using Application.Students.Commands;
-using Application.Students.EventHandlers;
 using Domain.Entities;
 using Domain.Events;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
 
 namespace Application;
 
@@ -16,10 +12,12 @@ public static class ConfigureServices
 {
     public static void AddApplicationServices(this IServiceCollection services)
     {
-        services.AddScoped<IRequestHandler<CreateStudentRequest, Student>, CreateStudentRequestHandler>();
-        services.AddScoped<INotificationHandler<StudentCreatedEvent>, StudentCreatedEventHandler>();
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddScoped<SignedUser>(_ => new SignedUser());
+        services.AddScoped<SignedUser>(_ => new SignedUser()
+        {
+            Name = "Alireza Sabouei",
+            UserId = new Guid("FB69B0F9-D40E-4985-86FD-BF8513F2CD01")
+        });
 
         //Auto Mapper Configuration
         services.AddAutoMapper(cfg =>
@@ -36,8 +34,5 @@ public static class ConfigureServices
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             // cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
         });
-
-        //In-Memory Caching Configuration
-        services.AddMemoryCache();
     }
 }

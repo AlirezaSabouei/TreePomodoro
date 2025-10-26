@@ -54,7 +54,8 @@ public class CreateTreeCommandHandler(
         var seed = new Tree
         {
             Index = CreateARandomIndexForTheTree(),
-            TreeState = TreeState.Seed
+            TreeState = TreeState.Seed,
+            PlantedDate = DateTime.Now
         };
 
         return seed;

@@ -1,9 +1,12 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Domain.Entities.Gardens;
 
 public class Garden : BaseEntity
 {
+    [BsonRepresentation(BsonType.String)]  // store GUID as string
     public Guid UserId { get; set; }
     public int Year { get; set; }
     public int Month { get; set; }
@@ -31,7 +34,7 @@ public class Garden : BaseEntity
                 return 0;
             }
 
-            return (int)(DateTime.Now - Trees.First(a => a.TreeState == TreeState.Seed).CreateDate).TotalSeconds;
+            return (int)(DateTime.Now - Trees.First(a => a.TreeState == TreeState.Seed).PlantedDate).TotalSeconds;
         }
     }
 }

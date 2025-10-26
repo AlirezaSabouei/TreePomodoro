@@ -13,14 +13,14 @@ public record UpdateGardenCommand : IRequest<Garden>
 
 public class UpdateGardenCommandHandler(
     IRequestHandler<GetGardenQuery, Garden> getGardenHandler,
-    IContext context) 
+    IDocumentStore<Garden> documentStore) 
     : IRequestHandler<UpdateGardenCommand, Garden>
 {
     public async Task<Garden> Handle(UpdateGardenCommand request, CancellationToken cancellationToken)
     {
         var garden = await GetGardenAsync(request, cancellationToken);
         request.Delta.Patch(garden);
-        await context.SaveChangesAsync();
+        await documentStore.UpdateAsync(garden);
         return garden;
     }
 

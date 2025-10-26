@@ -9,7 +9,7 @@ public record CreateGardenCommand : IRequest<Garden>;
 
 public class CreateGardenCommandHandler(
     IRequestHandler<GetGardenQuery, Garden?> getGardenHandler,
-    IContext context,
+    IDocumentStore<Garden> documentStore,
     SignedUser signedUser) 
     : IRequestHandler<CreateGardenCommand, Garden>
 {
@@ -35,8 +35,7 @@ public class CreateGardenCommandHandler(
             Month = today.Month,
             Day = today.Day
         };
-        await context.Gardens.AddAsync(garden);
-        await context.SaveChangesAsync();
+        await documentStore.InsertAsync(garden);
         return garden;
     }
 }

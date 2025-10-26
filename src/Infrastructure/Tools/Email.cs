@@ -6,13 +6,10 @@ namespace Infrastructure.Tools;
 
 public class Email(string senderEmail, string senderPassword) : IEmail
 {
-    private readonly string _senderEmail = senderEmail;
-    private readonly string _senderPassword = senderPassword;
-
-    public async Task SendEmailAsync(string email,string subject, string body)
+    public Task SendEmailAsync(string email, string subject, string body, CancellationToken cancellationToken)
     {
         // Create a new MailMessage object
-        MailMessage mail = new(_senderEmail, email)
+        MailMessage mail = new(senderEmail, email)
         {
             // Set the subject and body of the email
             Subject = subject,
@@ -23,18 +20,15 @@ public class Email(string senderEmail, string senderPassword) : IEmail
         SmtpClient smtpClient = new("smtp.gmail.com")
         {
             Port = 587, // Port for Gmail SMTP
-            Credentials = new NetworkCredential(_senderEmail, _senderPassword),
+            Credentials = new NetworkCredential(senderEmail, senderPassword),
             EnableSsl = true // Use SSL for secure connection
         };
 
         try
         {
             // Send the email
-            smtpClient.Send(mail);
-        }
-        catch (Exception ex)
-        {
-            
+            smtpClient.SendAsync(mail, cancellationToken);
+            return Task.CompletedTask;
         }
         finally
         {

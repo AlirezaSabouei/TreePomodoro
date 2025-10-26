@@ -1,19 +1,11 @@
 using System.Diagnostics;
-using Application.Gardens.Commands;
-using Domain.Entities.Gardens;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
 
 namespace MVC.Controllers;
 
-public class HomeController(
-    IRequestHandler<CreateGardenCommand, Garden> createGardenCommandHandler,
-    IRequestHandler<CreateTreeCommand, Garden> createTreeCommandHandler,
-    IRequestHandler<KillTreeCommand, Garden> killTreeCommandHandler,
-    ILogger<HomeController> logger) : Controller
+public class HomeController : Controller
 {
-    private Garden _garden = new() ;
     
     [HttpGet]
     public IActionResult Index()
@@ -38,7 +30,7 @@ public class HomeController(
     // }
     
     [HttpGet]
-    public async Task<IActionResult> LoadGarden(RequestType requestType)
+    public IActionResult LoadGarden(RequestType requestType)
     {
         return ViewComponent("Garden", new { requestType = requestType });
     }

@@ -11,15 +11,16 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddRazorPages();
+        builder.Services.AddControllersWithViews();
+        builder.Services.AddControllers().AddJsonOptions(x =>
+            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+        
         AddSwagger(builder);
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureServices(builder.Configuration);
+        
 
-        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-        builder.Services.AddControllersWithViews();
-
-        builder.Services.AddControllers().AddJsonOptions(x =>
-            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
         
         // builder.Services.AddCors(options =>
         // {
@@ -35,11 +36,7 @@ public class Program
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseMigrationsEndPoint();
-        }
-        else
+        if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.

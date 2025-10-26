@@ -1,9 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Domain.Entities.Gardens;
 
-public class Tree : BaseEntity
+[Owned]
+public class Tree
 {
-    public Garden Garden { get; set; }
     public TreeState TreeState { get; set; }
     public int Index { get; set; }
+    public DateTime PlantedDate { get; set; }
     public int GrowthTimeInSeconds { get; set; } = 1500;
 }

@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Application.Common.Behaviours;
+using Application.Gardens.Commands;
 using Domain.Entities;
+using Domain.Entities.Gardens;
 using Domain.Events;
 using FluentValidation;
 using MediatR;
@@ -13,6 +15,7 @@ public static class ConfigureServices
     public static void AddApplicationServices(this IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddTransient<IRequestHandler<CompleteTreeCommand,Garden>, CompleteTreeCommandHandler>();
         services.AddScoped<SignedUser>(_ => new SignedUser()
         {
             Name = "Alireza Sabouei",
@@ -34,5 +37,7 @@ public static class ConfigureServices
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             // cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
         });
+
+        services.AddSignalR();
     }
 }

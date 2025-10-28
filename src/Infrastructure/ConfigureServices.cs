@@ -7,7 +7,6 @@ using Hangfire.Mongo;
 using Hangfire.Mongo.Migration.Strategies;
 using Hangfire.Mongo.Migration.Strategies.Backup;
 using Infrastructure.Common.Data;
-using Infrastructure.JobTools;
 using Infrastructure.PasswordTools;
 using Infrastructure.Tools;
 using Microsoft.AspNetCore.Builder;
@@ -42,20 +41,26 @@ public static class ConfigureServices
         services.AddScoped<IEmail>(s=> new Email(senderEmail, senderPassword));
 
         // Hangfire Configuration
-        services.AddHangfire(x => x.UseMongoStorage(configuration.GetConnectionString("MongoConnection")));
-        services.AddHangfireServer();
-        services.AddScoped<IJob, Job>();
-
+        var mongoConnection = configuration.GetConnectionString("MongoConnection");
         var mongoStorageOptions = new MongoStorageOptions
         {
+            QueuePollInterval = TimeSpan.FromSeconds(1), // <- reduce polling,
             MigrationOptions = new MongoMigrationOptions
             {
                 MigrationStrategy = new MigrateMongoMigrationStrategy()
             }
         };
 
-        GlobalConfiguration.Configuration
-            .UseMongoStorage("mongodb://localhost:27017/Garden", mongoStorageOptions);
+        services.AddHangfire((serviceProvider, config) =>
+        {
+            config
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseMongoStorage(mongoConnection, mongoStorageOptions)
+                .UseActivator(new Hangfire.AspNetCore.AspNetCoreJobActivator(serviceProvider.GetRequiredService<IServiceScopeFactory>()));
+        });
+        services.AddHangfireServer();
+       // services.AddScoped<IJob, Job>();
         
         // Password Encryption Configuration
         services.AddScoped<IPasswordEncryption<BaseEntity>, PasswordEncryption<BaseEntity>>();

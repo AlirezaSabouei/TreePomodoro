@@ -62,7 +62,7 @@
 
     function SetGardenStateAndRemainingSeconds() {
         gardenState = $('#GardenState').val();
-        remainingSeconds = $('#RemainigSeconds').val();
+        remainingSeconds = $('#RemainingSeconds').val();
     }
 
     function SetButtonTextBasedOnGardenState() {
@@ -96,8 +96,6 @@
         const countdownInterval = setInterval(function () {
             if (timeLeftInSeconds <= 0) {
                 clearInterval(countdownInterval);
-                beep(300, 600);
-                RefreshGarden('@((int)RequestType.Refresh)');
                 return;
             }
             const minutes = Math.floor(timeLeftInSeconds / 60);
@@ -127,5 +125,30 @@
             oscillator.stop();
             audioCtx.close();
         }, duration);
+    }
+</script>
+
+
+
+<script>
+    // Create a single global connection instance if not already created
+    if (!window.gardenHubConnection) {
+        window.gardenHubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/hubs/garden?gardenId=@Model.Id")
+            .build();
+
+        // Subscribe to server events
+        window.gardenHubConnection.on("TreeCompleted", (gardenId, treeState) => {
+            RefreshGarden('@((int)RequestType.Refresh)');
+            beep(300, 600);
+        });
+    }
+
+    // Start the connection only if it's disconnected
+    if (window.gardenHubConnection.state === "Disconnected") {
+        window.gardenHubConnection
+            .start()
+            .then(() => console.log("SignalR connected"))
+            .catch(err => console.error("SignalR start error:", err));
     }
 </script>

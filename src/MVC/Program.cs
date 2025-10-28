@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Application;
+using Application.Gardens;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
 
@@ -48,7 +49,7 @@ public class Program
         (app as IHost).UseInfrastructureServices();
         (app as IApplicationBuilder).UseInfrastructureServices();
         app.UseAuthorization();
-
+        app.MapHub<GardenHub>("/hubs/garden");
         app.MapStaticAssets();
         app.MapControllerRoute(
             name: "default",

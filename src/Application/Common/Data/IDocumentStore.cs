@@ -6,8 +6,8 @@ namespace Application.Common.Data;
 
 public interface IDocumentStore<TEntity> where TEntity: BaseEntity
 {
-    Task<TEntity?> GetAsync(Expression<Func<TEntity,bool>> filter);
-    Task<List<TEntity>> GetByIdAsync(Guid id);
+    Task<List<TEntity>> GetAsync(Expression<Func<TEntity,bool>> filter, CancellationToken token = default);
+    Task<TEntity?> GetByIdAsync(Guid id, CancellationToken token = default);
     Task InsertAsync(TEntity entity);
     Task UpdateAsync(TEntity entity);
     Task DeleteAsync(Guid id);

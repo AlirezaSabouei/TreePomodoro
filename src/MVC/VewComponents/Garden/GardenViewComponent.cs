@@ -1,5 +1,7 @@
+using Application;
 using Microsoft.AspNetCore.Mvc;
 using Application.Gardens.Commands;
+using Domain.Entities.Gardens;
 using MediatR;
 using MVC.Models;
 
@@ -8,7 +10,8 @@ namespace MVC.VewComponents.Garden;
 public class GardenViewComponent(
     IRequestHandler<CreateGardenCommand, Domain.Entities.Gardens.Garden> createGardenCommandHandler,
     IRequestHandler<CreateTreeCommand,Domain.Entities.Gardens.Garden> createTreeCommandHandler,
-    IRequestHandler<KillTreeCommand, Domain.Entities.Gardens.Garden> killTreeCommandHandler) : ViewComponent
+    IRequestHandler<CompleteTreeCommand, Domain.Entities.Gardens.Garden> completeTreeCommandHandler,
+    SignedUser signedUser) : ViewComponent
 {
     private Domain.Entities.Gardens.Garden _garden = new();
     
@@ -35,13 +38,21 @@ public class GardenViewComponent(
 
     private async Task CreateTreeAsync()
     {
-        var command = new CreateTreeCommand();
+        var command = new CreateTreeCommand()
+        {
+            GardenId = _garden.Id,
+            GrowthTimeInSeconds = signedUser.TreeGrowthTimeInSeconds
+        };
         _garden =  await createTreeCommandHandler.Handle(command, CancellationToken.None);
     }
 
     private async Task KillTreeAsync()
     {
-        var command = new KillTreeCommand();
-        _garden = await killTreeCommandHandler.Handle(command, CancellationToken.None);
+        var command = new CompleteTreeCommand()
+        {
+            GardenId = _garden.Id,
+            TreeState = TreeState.Dry
+        };
+        _garden = await completeTreeCommandHandler.Handle(command, CancellationToken.None);
     }
 }

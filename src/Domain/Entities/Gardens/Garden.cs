@@ -6,8 +6,9 @@ namespace Domain.Entities.Gardens;
 
 public class Garden : BaseEntity
 {
-    [BsonRepresentation(BsonType.String)]  // store GUID as string
+    [BsonRepresentation(BsonType.String)] // store GUID as string
     public Guid UserId { get; set; }
+
     public int Year { get; set; }
     public int Month { get; set; }
     public int Day { get; set; }
@@ -34,7 +35,8 @@ public class Garden : BaseEntity
                 return 0;
             }
 
-            return (int)(DateTime.Now - Trees.First(a => a.TreeState == TreeState.Seed).PlantedDate).TotalSeconds;
+            var tree = Trees.First(a => a.TreeState == TreeState.Seed);
+            return (int)(tree.GrowthTimeInSeconds - (DateTime.Now - tree.PlantedDate).TotalSeconds);
         }
     }
 }

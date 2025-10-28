@@ -5,4 +5,5 @@ namespace Application.Common.Tools;
 public interface IJob
 {
     void QueueJob(Expression<Action> action, TimeSpan delay);
+    Task ExecuteAsync(Guid gardenId);
 }

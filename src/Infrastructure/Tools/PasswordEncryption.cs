@@ -2,7 +2,7 @@
 using Domain;
 using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.PasswordTools;
+namespace Infrastructure.Tools;
 
 public class PasswordEncryption<TBaseEntity>(IPasswordHasher<BaseEntity> passwordHasher) : 
     IPasswordEncryption<BaseEntity> where TBaseEntity : BaseEntity

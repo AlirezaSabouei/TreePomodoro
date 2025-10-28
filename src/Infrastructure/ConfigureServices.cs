@@ -7,7 +7,6 @@ using Hangfire.Mongo;
 using Hangfire.Mongo.Migration.Strategies;
 using Hangfire.Mongo.Migration.Strategies.Backup;
 using Infrastructure.Common.Data;
-using Infrastructure.PasswordTools;
 using Infrastructure.Tools;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;

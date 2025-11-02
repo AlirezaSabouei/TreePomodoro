@@ -1,0 +1,44 @@
+<div class="position-relative">
+    <button class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0" 
+            type="button" 
+            data-bs-toggle="collapse" 
+            data-bs-target="#waterContent" 
+            aria-expanded="true" 
+            aria-controls="waterContent">
+        <span class="collapsed-show">▼</span>
+        <span class="collapsed-hide">▲</span>
+    </button>
+    
+    <h5 class="text-nowrap mb-2">🥤 Water Intake Tracker</h5>
+    
+    <div class="collapse show" id="waterContent">
+        <span class="d-block mb-1">Start creating your garden!</span>
+        <ul id="test">
+            <li>💧</li>
+            <li>💧</li>
+            <li>💧</li>
+            <li>💧</li>
+            <li>💧</li>
+            <li>💧</li>
+            <li>💧</li>
+            <li>💧</li>
+            <li>💧</li>
+            <li class="add-water">➕</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .collapse.show ~ button .collapsed-show,
+    .collapse:not(.show) ~ button .collapsed-hide {
+        display: none;
+    }
+    
+    /* Alternative: using collapse state on button */
+    [data-bs-toggle="collapse"][aria-expanded="true"] .collapsed-show {
+        display: none;
+    }
+    [data-bs-toggle="collapse"][aria-expanded="false"] .collapsed-hide {
+        display: none;
+    }
+</style>

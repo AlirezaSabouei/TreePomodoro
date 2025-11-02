@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
+using MVC.Views.Shared.Components.WaterComponent;
 
 namespace MVC.Controllers;
 
@@ -32,7 +33,19 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult LoadGarden(RequestType requestType)
     {
-        return ViewComponent("Garden", new { requestType = requestType });
+        return ViewComponent("GardenComponent", new { requestType = requestType });
+    }
+    
+    [HttpGet]
+    public IActionResult LoadWater()
+    {
+        return ViewComponent(nameof(WaterComponent));
+    }
+    
+    [HttpGet]
+    public IActionResult LoadAlert()
+    {
+        return ViewComponent("AlertComponent");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

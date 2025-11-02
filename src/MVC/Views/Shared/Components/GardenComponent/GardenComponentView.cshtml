@@ -1,0 +1,276 @@
+@using Domain.Entities.Gardens
+
+@model Domain.Entities.Gardens.Garden
+
+@{
+    Layout = null;
+}
+
+@{
+    var index = 0;
+
+    string GetClass()
+    {
+        var tree = Model.Trees.FirstOrDefault(a => a.Index == index);
+        return tree is null ? "" : tree.TreeState.ToString().ToLower();
+    }
+}
+
+@Html.HiddenFor(a => a.GardenState)
+@Html.HiddenFor(a => a.RemainingSeconds)
+
+<div class="col-12 position-relative">
+    <button class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0" 
+            type="button" 
+            data-bs-toggle="collapse" 
+            data-bs-target="#gardenContent" 
+            aria-expanded="true" 
+            aria-controls="gardenContent"
+            style="z-index: 10;">
+        <span class="when-expanded">▼</span>
+        <span class="when-collapsed" style="display: none;">▲</span>
+    </button>
+    
+    <h5 class="text-nowrap mb-2">🌳 Tree Pomodoro!</h5>
+    
+    <div class="collapse show" id="gardenContent">
+        <span class="d-block mb-1">Start creating your garden!</span>
+        
+        <table id="garden" class="table table-bordered">
+            <tbody>
+            @for (var i = 0; i < 5; i++)
+            {
+                <tr>
+                    @for (var j = 0; j < 5; j++)
+                    {
+                        var treeType = GetClass();
+                        <td class="@treeType">
+                            @if (treeType == TreeState.Seed.ToString().ToLower())
+                            {
+                                <span id="timer" class="badge badge-light"></span>
+                            }
+                        </td>
+                        index++;
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+        <br/>
+        <button id="btnPlant" type="button" class="btn btn-success">
+            Plant A Tree!
+        </button>
+    </div>
+</div>
+
+<style>
+    [data-bs-toggle="collapse"][aria-expanded="true"] .when-collapsed {
+        display: inline !important;
+    }
+    [data-bs-toggle="collapse"][aria-expanded="true"] .when-expanded {
+        display: none !important;
+    }
+    [data-bs-toggle="collapse"][aria-expanded="false"] .when-collapsed {
+        display: none !important;
+    }
+    [data-bs-toggle="collapse"][aria-expanded="false"] .when-expanded {
+        display: inline !important;
+    }
+</style>
+
+@* <script> *@
+@*     // ===== GARDEN STATE ===== *@
+@*     let gardenState = $('#GardenState').val(); *@
+@*     let remainingSeconds = $('#RemainingSeconds').val(); *@
+@* *@
+@*     // ===== INITIALIZATION ===== *@
+@*     $(document).ready(function () { *@
+@*         updatePlantButtonText(); *@
+@*          *@
+@*         if (gardenState === '@GardenState.GrowingATree') { *@
+@*             startTimer(); *@
+@*         } *@
+@*     }); *@
+@* *@
+@*     // ===== PLANT BUTTON ===== *@
+@*     function updatePlantButtonText() { *@
+@*         const buttonText = gardenState === '@GardenState.GrowingATree'  *@
+@*             ? 'Cancel Planting'  *@
+@*             : 'Plant A Tree!'; *@
+@*         $('#btnPlant').text(buttonText); *@
+@*     } *@
+@* *@
+@*     $('#btnPlant').on('click', function () { *@
+@*         const requestType = gardenState === '@GardenState.GrowingATree' *@
+@*             ? '@((int)RequestType.KillTheSeed)' *@
+@*             : '@((int)RequestType.PlantASeed)'; *@
+@*         refreshGarden(requestType); *@
+@*     }); *@
+@* *@
+@*     // ===== GARDEN REFRESH ===== *@
+@*     function refreshGarden(requestType) { *@
+@*         $('#garden-container').load( *@
+@*             '@Url.Action("LoadGarden", "Home")?requestType=' + requestType *@
+@*         ); *@
+@*     } *@
+@* *@
+@*     // ===== TIMER ===== *@
+@*     function startTimer() { *@
+@*         let timeLeft = remainingSeconds; *@
+@*         const timerDisplay = $('#timer'); *@
+@* *@
+@*         const interval = setInterval(() => { *@
+@*             if (timeLeft <= 0) { *@
+@*                 clearInterval(interval); *@
+@*                 return; *@
+@*             } *@
+@* *@
+@*             const minutes = Math.floor(timeLeft / 60); *@
+@*             const seconds = String(timeLeft % 60).padStart(2, '0'); *@
+@*             timerDisplay.text(`${minutes}:${seconds}`); *@
+@* *@
+@*             timeLeft--; *@
+@*         }, 1000); *@
+@*     } *@
+@* *@
+@*     // ===== SOUND ===== *@
+@*     function beep(duration = 200, frequency = 440) { *@
+@*         const audioCtx = new (window.AudioContext || window.webkitAudioContext)(); *@
+@*         const oscillator = audioCtx.createOscillator(); *@
+@*         const gainNode = audioCtx.createGain(); *@
+@* *@
+@*         oscillator.connect(gainNode); *@
+@*         gainNode.connect(audioCtx.destination); *@
+@* *@
+@*         oscillator.frequency.value = frequency; *@
+@*         oscillator.start(); *@
+@* *@
+@*         setTimeout(() => { *@
+@*             oscillator.stop(); *@
+@*             audioCtx.close(); *@
+@*         }, duration); *@
+@*     } *@
+@* *@
+@*     // ===== SIGNALR CONNECTION ===== *@
+@*     if (!window.gardenHubConnection) { *@
+@*         window.gardenHubConnection = new signalR.HubConnectionBuilder() *@
+@*             .withUrl("/hubs/garden?gardenId=@Model.Id") *@
+@*             .build(); *@
+@* *@
+@*         window.gardenHubConnection.on("TreeCompleted", () => { *@
+@*             refreshGarden('@((int)RequestType.Refresh)'); *@
+@*             beep(300, 600); *@
+@*         }); *@
+@*     } *@
+@* *@
+@*     if (window.gardenHubConnection.state === "Disconnected") { *@
+@*         window.gardenHubConnection *@
+@*             .start() *@
+@*             .then(() => console.log("SignalR connected")) *@
+@*             .catch(err => console.error("SignalR error:", err)); *@
+@*     } *@
+@* </script> *@
+
+<script>
+    var gardenState;
+    var remainingSeconds = 0;
+
+    $(document).ready(function () {
+        SetGardenStateAndRemainingSeconds();
+        SetButtonTextBasedOnGardenState();
+        if (gardenState === '@GardenState.GrowingATree')
+        {
+            StartTimer();
+        }
+    });
+
+    function SetGardenStateAndRemainingSeconds() {
+        gardenState = $('#GardenState').val();
+        remainingSeconds = $('#RemainingSeconds').val();
+    }
+
+    function SetButtonTextBasedOnGardenState() {
+        if (gardenState === '@GardenState.GrowingATree') {
+            $('#btnPlant').text('Cancel Planting');
+        } else {
+            $('#btnPlant').text('Plant A Tree!');
+        }
+    }
+
+    $("#btnPlant").on('click', function () {
+        if (gardenState === '@GardenState.GrowingATree') {
+            RefreshGarden('@((int)RequestType.KillTheSeed)');
+        } else {
+            RefreshGarden('@((int)RequestType.PlantASeed)');
+        }
+    });
+
+    function RefreshGarden(requestType, callback) {
+        $('#garden-container').load('@Url.Action("LoadGarden", "Home")?requestType=' + requestType, function () {
+            if (typeof callback === 'function') {
+                callback(); // run callback after load completes
+            }
+        });
+    }
+
+    function StartTimer() {
+        let timeLeftInSeconds = remainingSeconds;
+        const timerDisplay = document.getElementById('timer');
+
+        const countdownInterval = setInterval(function () {
+            if (timeLeftInSeconds <= 0) {
+                clearInterval(countdownInterval);
+                return;
+            }
+            const minutes = Math.floor(timeLeftInSeconds / 60);
+            let seconds = timeLeftInSeconds % 60;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            timerDisplay.textContent = `${minutes}:${seconds}`;
+
+            timeLeftInSeconds--;
+        }, 1000);
+    }
+
+    function beep(duration = 200, frequency = 440, volume = 1, type = 'sine') {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.type = type;       // sine, square, sawtooth, triangle
+        oscillator.frequency.value = frequency;
+        gainNode.gain.value = volume;
+
+        oscillator.start();
+        setTimeout(() => {
+            oscillator.stop();
+            audioCtx.close();
+        }, duration);
+    }
+</script>
+
+<script>
+    // Create a single global connection instance if not already created
+    if (!window.gardenHubConnection) {
+        window.gardenHubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/hubs/garden?gardenId=@Model.Id")
+            .build();
+
+        // Subscribe to server events
+        window.gardenHubConnection.on("TreeCompleted", (gardenId, treeState) => {
+            RefreshGarden('@((int)RequestType.Refresh)');
+            beep(300, 600);
+        });
+    }
+
+    // Start the connection only if it's disconnected
+    if (window.gardenHubConnection.state === "Disconnected") {
+        window.gardenHubConnection
+            .start()
+            .then(() => console.log("SignalR connected"))
+            .catch(err => console.error("SignalR start error:", err));
+    }
+</script>

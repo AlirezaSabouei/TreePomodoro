@@ -83,6 +83,15 @@
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.slim.min.map" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
       <_ContentIncludedByDefault Remove="Views\Student\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Shared\Components\GardenComponent\GardenComponent.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Components\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Views\Shared\Components\GardenComponent\GardenComponentView.cshtml" />
     </ItemGroup>
 
 </Project>

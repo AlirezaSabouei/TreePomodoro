@@ -24,11 +24,14 @@ public class DocumentStore<TEntity>(IMongoDatabase database, IMediator mediator)
 
     public async Task InsertAsync(TEntity entity)
     {
+        entity.CreateDate = DateTime.UtcNow;
+        entity.UpdateDate = DateTime.UtcNow;
         await _collection.InsertOneAsync(entity);
     }
 
     public async Task UpdateAsync(TEntity entity)
     {
+        entity.UpdateDate = DateTime.UtcNow;
         await _collection.ReplaceOneAsync(g => g.Id == entity.Id, entity);
     }
 

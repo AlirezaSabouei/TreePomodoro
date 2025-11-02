@@ -7,7 +7,7 @@ namespace Application.Gardens.Commands;
 
 public record CreateGardenCommand : IRequest<Garden>
 {
-    public Guid UserId { get; set; }
+    public required Guid UserId { get; set; }
 }
 
 public class CreateGardenCommandHandler(

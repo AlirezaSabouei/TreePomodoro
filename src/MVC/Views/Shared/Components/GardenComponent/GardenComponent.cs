@@ -1,19 +1,19 @@
 using Application;
-using Microsoft.AspNetCore.Mvc;
 using Application.Gardens.Commands;
 using Domain.Entities.Gardens;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
 
-namespace MVC.VewComponents.Garden;
+namespace MVC.Views.Shared.Components.GardenComponent;
 
-public class GardenViewComponent(
-    IRequestHandler<CreateGardenCommand, Domain.Entities.Gardens.Garden> createGardenCommandHandler,
-    IRequestHandler<CreateTreeCommand,Domain.Entities.Gardens.Garden> createTreeCommandHandler,
-    IRequestHandler<CompleteTreeCommand, Domain.Entities.Gardens.Garden> completeTreeCommandHandler,
+public class GardenComponent(
+    IRequestHandler<CreateGardenCommand, Garden> createGardenCommandHandler,
+    IRequestHandler<CreateTreeCommand, Garden> createTreeCommandHandler,
+    IRequestHandler<CompleteTreeCommand, Garden> completeTreeCommandHandler,
     SignedUser signedUser) : ViewComponent
 {
-    private Domain.Entities.Gardens.Garden _garden = new();
+    private Garden _garden = new();
     
     public async Task<IViewComponentResult> InvokeAsync(RequestType requestType)
     {
@@ -27,12 +27,15 @@ public class GardenViewComponent(
                 await KillTreeAsync();
                 break;
         }
-        return View("Garden", _garden);
+        return View("GardenComponentView", _garden);
     }
 
     private async Task CreateGardenIfNecessaryAsync()
     {
-        var command = new CreateGardenCommand();
+        var command = new CreateGardenCommand()
+        {
+            UserId = signedUser.UserId
+        };
         _garden = await createGardenCommandHandler.Handle(command, CancellationToken.None);
     }
 

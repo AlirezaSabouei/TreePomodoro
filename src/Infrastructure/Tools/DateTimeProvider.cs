@@ -4,7 +4,7 @@ namespace Infrastructure.Tools;
 
 public class DateTimeProvider : IDateTimeProvider
 {
-    public DateTime GetUtcNow()
+    public DateTime GetNow()
     {
         return DateTime.UtcNow;
     }

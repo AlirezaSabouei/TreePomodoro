@@ -199,9 +199,9 @@
 
     $("#btnPlant").on('click', function () {
         if (gardenState === '@GardenState.GrowingATree') {
-            RefreshGarden('@((int)RequestType.KillTheSeed)');
+            RefreshGarden('@((int)RequestType.Remove)');
         } else {
-            RefreshGarden('@((int)RequestType.PlantASeed)');
+            RefreshGarden('@((int)RequestType.Add)');
         }
     });
 

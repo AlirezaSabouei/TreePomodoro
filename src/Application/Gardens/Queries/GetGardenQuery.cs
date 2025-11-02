@@ -7,23 +7,16 @@ namespace Application.Gardens.Queries;
 public record GetGardenQuery : IRequest<Garden>
 {
     public required Guid UserId { get; set; }
-    public required int Year { get; set; }
-    public required int Month { get; set; }
-    public required int Day { get; set; }
+    public required DateTime Today { get; set; }
 }
 
-public class GetGardenQueryHandler(IDocumentStore<Garden> documentStore) 
+public class GetGardenQueryHandler(IDocumentStore<Garden> documentStore)
     : IRequestHandler<GetGardenQuery, Garden>
 {
     public async Task<Garden> Handle(GetGardenQuery request, CancellationToken cancellationToken)
     {
         var gardens = await documentStore
-            .GetAsync(a=>
-                a.Year == request.Year &&
-                a.Month == request.Month &&
-                a.Day == request.Day &&
-                a.UserId == request.UserId
-                ,cancellationToken);
+            .GetAsync(a => a.UserId == request.UserId && a.Year == request.Today.Year && a.Month == request.Today.Month && a.Day == request.Today.Day, cancellationToken);
         return gardens.FirstOrDefault()!;
     }
 }

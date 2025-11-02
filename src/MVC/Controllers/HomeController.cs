@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
+using MVC.Views.Shared.Components.GardenComponent;
 using MVC.Views.Shared.Components.WaterComponent;
 
 namespace MVC.Controllers;
@@ -14,32 +15,16 @@ public class HomeController : Controller
         return View();
     }
     
-    // public async Task<IActionResult> RefreshGarden(RequestType requestType)
-    // {
-    //     
-    //     await createGardenCommandHandler.Handle();
-    //     switch (requestType)
-    //     {
-    //         case RequestType.PlantASeed:
-    //             await gardenServices.PlantASeedAsync();
-    //             break;
-    //         case RequestType.KillTheSeed:
-    //             await gardenServices.KillATreeAsync();
-    //             break;
-    //     }
-    //     return PartialView("_garden", _garden);
-    // }
-    
     [HttpGet]
     public IActionResult LoadGarden(RequestType requestType)
     {
-        return ViewComponent("GardenComponent", new { requestType = requestType });
+        return ViewComponent(nameof(GardenComponent), new { requestType = requestType });
     }
     
     [HttpGet]
-    public IActionResult LoadWater()
+    public IActionResult LoadWater(RequestType requestType)
     {
-        return ViewComponent(nameof(WaterComponent));
+        return ViewComponent(nameof(WaterComponent), new { requestType = requestType });
     }
     
     [HttpGet]

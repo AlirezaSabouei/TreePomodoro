@@ -20,10 +20,10 @@ public class GardenComponent(
         await CreateGardenIfNecessaryAsync();
         switch (requestType)
         {
-            case RequestType.PlantASeed:
+            case RequestType.Add:
                 await CreateTreeAsync();
                 break;
-            case RequestType.KillTheSeed:
+            case RequestType.Remove:
                 await KillTreeAsync();
                 break;
         }

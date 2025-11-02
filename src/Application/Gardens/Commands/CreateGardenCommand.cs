@@ -23,13 +23,10 @@ public class CreateGardenCommandHandler(
     
     private async Task<Garden?> GetGardenAsync(CreateGardenCommand request,CancellationToken cancellationToken)
     {
-        var dateTime = DateTime.Today;
-        var query = new GetGardenQuery()
+        var query = new GetGardenQuery
         {
             UserId = request.UserId,
-            Year = dateTime.Year,
-            Month = dateTime.Month,
-            Day = dateTime.Day,
+            Today = DateTime.Today
         };
         return await getGardenHandler.Handle(query, cancellationToken);
     }

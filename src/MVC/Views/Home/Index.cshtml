@@ -1044,7 +1044,7 @@
 <script>
   $(document).ready(function () {
     $('#garden-container').load('@Url.Action("LoadGarden", "Home")?requestType=@RequestType.Refresh');
-    $('#water-container').load('@Url.Action("LoadWater", "Home")');
+    $('#water-container').load('@Url.Action("LoadWater", "Home")?requestType=@RequestType.Refresh');
     $('#alert-container').load('@Url.Action("LoadAlert", "Home")');
     // $('#alert-container').attr("style", "display:none");
   });

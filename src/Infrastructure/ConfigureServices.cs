@@ -2,6 +2,7 @@
 using Application.Common.Tools;
 using Domain;
 using Domain.Entities.Gardens;
+using Domain.Entities.Glasses;
 using Hangfire;
 using Hangfire.Mongo;
 using Hangfire.Mongo.Migration.Strategies;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace Infrastructure;
@@ -22,6 +24,7 @@ public static class ConfigureServices
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IDocumentStore<Garden>, DocumentStore<Garden>>();
+        services.AddScoped<IDocumentStore<Glass>, DocumentStore<Glass>>();
         
         //MongoDB
         // Register MongoClient as singleton
@@ -33,6 +36,8 @@ public static class ConfigureServices
             var client = sp.GetRequiredService<IMongoClient>();
             return client.GetDatabase("Garden");
         });
+        
+        BsonSerializer.RegisterSerializer(new LocalDateTimeSerializer());
         
         //Email Configuration
         var senderEmail = configuration.GetSection("Email")["Address"]!;

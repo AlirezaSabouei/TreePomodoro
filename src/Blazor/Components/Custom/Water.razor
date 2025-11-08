@@ -1,0 +1,101 @@
+@using Application
+@using Application.Glasses.Commands
+@using Application.Glasses.Queries
+@using Domain.Entities.Glasses
+@using MediatR
+@inject SignedUser SignedUser
+@inject IRequestHandler<GetGlassesQuery, List<Glass>> GetGlassesQueryHandler
+@inject IRequestHandler<CreateGlassCommand, Glass> CreateGlassCommandHandler
+@inject IRequestHandler<DeleteGlassCommand> DeleteGlassCommandHandler
+@rendermode InteractiveServer
+
+<div id="water-container">
+    <div class="card">
+        <div class="card-body">
+            @if (_glasses == null)
+            {
+                <div class="spinner-wrapper">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="position-relative">
+                    <button class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#waterContent"
+                            aria-expanded="true"
+                            aria-controls="waterContent">
+                        <span class="collapsed-show">▼</span>
+                        <span class="collapsed-hide">▲</span>
+                    </button>
+
+                    <h5 class="text-nowrap mb-2">🥤 Water Intake Tracker</h5>
+                    <div class="collapse show" id="waterContent">
+                        <span class="d-block mb-1">Get hydrated! (@_glasses.Count Glasses until now)</span>
+                        <ul>
+                            @foreach (var glass in _glasses)
+                            {
+                                <li @onclick="DeleteGlassAsync"></li>
+                            }
+                            <li @onclick="AddGlassAsync" class="add-water"></li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .collapse.show ~ button .collapsed-show,
+    .collapse:not(.show) ~ button .collapsed-hide {
+        display: none;
+    }
+
+    /* Alternative: using collapse state on button */
+    [data-bs-toggle="collapse"][aria-expanded="true"] .collapsed-show {
+        display: none;
+    }
+
+    [data-bs-toggle="collapse"][aria-expanded="false"] .collapsed-hide {
+        display: none;
+    }
+</style>
+
+@code {
+    private List<Glass>? _glasses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var query = new GetGlassesQuery()
+        {
+            Today = DateTime.Today,
+            UserId = SignedUser.UserId
+        };
+        _glasses = await GetGlassesQueryHandler.Handle(query, CancellationToken.None);
+    }
+
+    private async Task AddGlassAsync()
+    {
+        var command = new CreateGlassCommand()
+        {
+            UserId = SignedUser.UserId
+        };
+        var glass = await CreateGlassCommandHandler.Handle(command, CancellationToken.None);
+        _glasses!.Add(glass);
+    }
+
+    private async Task DeleteGlassAsync()
+    {
+        var command = new DeleteGlassCommand()
+        {
+            UserId = SignedUser.UserId
+        };
+        await DeleteGlassCommandHandler.Handle(command,CancellationToken.None);
+        _glasses!.RemoveAt(0);
+    }
+}

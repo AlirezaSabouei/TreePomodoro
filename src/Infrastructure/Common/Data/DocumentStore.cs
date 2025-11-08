@@ -27,16 +27,30 @@ public class DocumentStore<TEntity>(IMongoDatabase database, IMediator mediator)
         entity.CreateDate = DateTime.UtcNow;
         entity.UpdateDate = DateTime.UtcNow;
         await _collection.InsertOneAsync(entity);
+        await DispatchEvents(entity);
     }
 
     public async Task UpdateAsync(TEntity entity)
     {
         entity.UpdateDate = DateTime.UtcNow;
         await _collection.ReplaceOneAsync(g => g.Id == entity.Id, entity);
+        await DispatchEvents(entity);
     }
 
     public async Task DeleteAsync(Guid id)
     {
         var entity = await _collection.FindOneAndDeleteAsync(g => g.Id == id);
+    }
+
+    private async Task DispatchEvents(TEntity entity)
+    {
+        var events = entity.DomainEvents;
+        
+        foreach (var domainEvent in events)
+        {
+            await mediator.Publish(domainEvent);
+        }
+        
+        entity.ClearDomainEvents();
     }
 }

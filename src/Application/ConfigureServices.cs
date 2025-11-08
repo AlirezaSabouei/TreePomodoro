@@ -14,12 +14,13 @@ public static class ConfigureServices
 {
     public static void AddApplicationServices(this IServiceCollection services)
     {
+        services.AddSingleton<NotificationService>();
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddTransient<IRequestHandler<CompleteTreeCommand,Garden>, CompleteTreeCommandHandler>();
         services.AddScoped<SignedUser>(_ => new SignedUser()
         {
             Name = "Alireza Sabouei",
-            UserId = new Guid("FB69B0F9-D40E-4985-86FD-BF8513F2CD01")
+            UserId = new Guid("FB69B0F9-D40E-4985-86FD-BF8513F2CD01"),
+            TreeGrowthTimeInSeconds = 1500
         });
 
         //Auto Mapper Configuration

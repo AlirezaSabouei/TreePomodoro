@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="13.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
       <HintPath>..\..\..\..\.nuget\packages\microsoft.entityframeworkcore.abstractions\9.0.10\lib\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
     </Reference>
@@ -21,6 +17,10 @@
 
   <ItemGroup>
     <Folder Include="Exceptions\Gardens\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="13.1.0" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 using System.Diagnostics;
+using Components.Models;
+using Components.ViewComponents;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
-using MVC.Views.Shared.Components.GardenComponent;
-using MVC.Views.Shared.Components.WaterComponent;
 
 namespace MVC.Controllers;
 
@@ -18,13 +18,13 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult LoadGarden(RequestType requestType)
     {
-        return ViewComponent(nameof(GardenComponent), new { requestType = requestType });
+        return ViewComponent(nameof(GardenViewComponent), new { requestType = requestType });
     }
     
     [HttpGet]
     public IActionResult LoadWater(RequestType requestType)
     {
-        return ViewComponent(nameof(WaterComponent), new { requestType = requestType });
+        return ViewComponent(nameof(WaterViewComponent), new { requestType = requestType });
     }
     
     [HttpGet]

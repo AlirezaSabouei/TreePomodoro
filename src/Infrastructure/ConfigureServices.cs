@@ -52,7 +52,8 @@ public static class ConfigureServices
             MigrationOptions = new MongoMigrationOptions
             {
                 MigrationStrategy = new MigrateMongoMigrationStrategy()
-            }
+            },
+            CheckQueuedJobsStrategy = CheckQueuedJobsStrategy.TailNotificationsCollection,
         };
 
         services.AddHangfire((serviceProvider, config) =>
@@ -63,6 +64,7 @@ public static class ConfigureServices
                 .UseMongoStorage(mongoConnection, mongoStorageOptions)
                 .UseActivator(new Hangfire.AspNetCore.AspNetCoreJobActivator(serviceProvider.GetRequiredService<IServiceScopeFactory>()));
         });
+        
         services.AddHangfireServer();
        // services.AddScoped<IJob, Job>();
         

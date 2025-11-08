@@ -1,0 +1,81 @@
+@using Components.Models
+@model List<Domain.Entities.Glasses.Glass>
+
+<div class="card">
+    <div class="card-body">
+        <!-- Toast with Placements -->
+        @* <button type="button" class="btn btn-primary" id="showToastPlacement">Show live toast</button> *@
+        @* <button type="button" class="btn btn-primary" onclick="popToast()">Show live toast</button> *@
+        @* *@
+        @* <div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000"> *@
+        @*   <div class="toast-header"> *@
+        @*     <i class="bx bx-bell me-2"></i> *@
+        @*     <div class="me-auto fw-semibold">Bootstrap</div> *@
+        @*     <small>11 mins ago</small> *@
+        @*     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button> *@
+        @*   </div> *@
+        @*   <div class="toast-body">Fruitcake chocolate bar tootsie roll gummies gummies jelly beans cake.</div> *@
+        @* </div> *@
+        @* <!-- Toast with Placements --> *@
+        @* <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEnd" aria-controls="offcanvasEnd"> *@
+        @*   Toggle End *@
+        @* </button> *@
+        <div class="position-relative">
+            <button class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#waterContent"
+                    aria-expanded="true"
+                    aria-controls="waterContent">
+                <span class="collapsed-show">▼</span>
+                <span class="collapsed-hide">▲</span>
+            </button>
+
+            <h5 class="text-nowrap mb-2">🥤 Water Intake Tracker</h5>
+
+            <div class="collapse show" id="waterContent">
+                <span class="d-block mb-1">Get hydrated!</span>
+                <ul>
+                    @foreach (var glass in Model)
+                    {
+                        <li>💧</li>
+                    }
+                    <li id="btnAddGlass" class="add-water">➕</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .collapse.show ~ button .collapsed-show,
+    .collapse:not(.show) ~ button .collapsed-hide {
+        display: none;
+    }
+
+    /* Alternative: using collapse state on button */
+    [data-bs-toggle="collapse"][aria-expanded="true"] .collapsed-show {
+        display: none;
+    }
+
+    [data-bs-toggle="collapse"][aria-expanded="false"] .collapsed-hide {
+        display: none;
+    }
+</style>
+
+<script>
+
+    $("#btnAddGlass").on('click', function () {
+        RefreshGlasses('@((int)RequestType.Add)');
+    });
+
+    function RefreshGlasses(requestType, callback) {
+        $('#water-container').load('@Url.Action("LoadWater", "Home")?requestType=' + requestType, function () {
+            if (typeof callback === 'function') {
+                callback(); // run callback after load completes
+            }
+        });
+    }
+
+</script>

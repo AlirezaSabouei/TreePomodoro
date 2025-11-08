@@ -909,4 +909,6 @@ html:not(.layout-menu-collapsed) .bg-menu-theme .menu-inner .menu-item .menu-lin
 
 #water-container ul .add-water{
     cursor: pointer;
+    width: 54px;
+    text-align: center;
 }

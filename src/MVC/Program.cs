@@ -16,11 +16,13 @@ public class Program
         builder.Services.AddControllersWithViews();
         builder.Services.AddControllers().AddJsonOptions(x =>
             x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
         
         AddSwagger(builder);
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureServices(builder.Configuration);
-        
+        // builder.Services.AddControllersWithViews()
+        //     .AddApplicationPart(typeof(Components.ViewComponents.HelloViewComponent).Assembly);
 
         
         // builder.Services.AddCors(options =>

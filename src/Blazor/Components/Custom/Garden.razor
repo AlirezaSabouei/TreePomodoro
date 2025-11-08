@@ -1,0 +1,216 @@
+@using Application
+@using Application.Gardens.Commands
+@using Application.Gardens.Queries
+@using Domain.Entities.Gardens
+@using MediatR
+@inject SignedUser SignedUser
+@inject IRequestHandler<GetGardenByIdQuery, Domain.Entities.Gardens.Garden> GetGardenByIdQueryHandler;
+@inject IRequestHandler<CreateGardenCommand, Domain.Entities.Gardens.Garden> CreateGardenCommandHandler;
+@inject IRequestHandler<AddSeedCommand, Domain.Entities.Gardens.Garden> AddSeedCommandHandler;
+@inject IRequestHandler<KillSeedCommand, Domain.Entities.Gardens.Garden> KillSeedCommandHandler;
+@inject NotificationService Notifier
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<div class="card">
+    <div class="card-body">
+        <div class="col-12 position-relative">
+            <button class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#gardenContent"
+                    aria-expanded="true"
+                    aria-controls="gardenContent"
+                    style="z-index: 10;">
+                <span class="when-expanded">▼</span>
+                <span class="when-collapsed" style="display: none;">▲</span>
+            </button>
+
+            @if (_garden == null)
+            {
+                <div class="spinner-wrapper">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <h5 class="text-nowrap mb-2">🌳 Tree Pomodoro!</h5>
+
+                <div class="collapse show" id="gardenContent">
+                    <div class="row">
+                        <div class="col-8">
+                            <span class="d-block mb-1">Start creating your garden!</span>
+                        </div>
+                        <div class="col-4">
+
+                        </div>
+                    </div>
+                    <table id="garden" class="table table-bordered">
+                        <tbody>
+                        @{
+                            index = 0;
+                        }
+                        @for (var i = 0; i < 5; i++)
+                        {
+                            <tr>
+                                @for (var j = 0; j < 5; j++)
+                                {
+                                    var treeType = GetClass();
+                                    <td class="@treeType">
+                                        @if (treeType == "seed")
+                                        {
+                                            <span>@($"{_remainingSeconds / 60:D2}:{_remainingSeconds % 60:D2}")</span>
+                                        }
+                                    </td>
+                                    index++;
+                                }
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                    <br/>
+                    @if (_garden!.GardenState == GardenState.ReadyToPlantASeed)
+                    {
+                        <div class="text-center">
+                            <button @onclick="AddSeedAsync" type="button" class="btn btn-success">
+                                Plant A Tree!
+                            </button>
+                        </div>
+                    }
+                    else if (_garden?.GardenState == GardenState.GrowingATree)
+                    {
+                        <div class="text-center">
+                            <button @onclick="KillSeedAsync" type="button" class="btn btn-warning">
+                                Cancel Planting!
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<style>
+    [data-bs-toggle="collapse"][aria-expanded="true"] .when-collapsed {
+        display: inline !important;
+    }
+
+    [data-bs-toggle="collapse"][aria-expanded="true"] .when-expanded {
+        display: none !important;
+    }
+
+    [data-bs-toggle="collapse"][aria-expanded="false"] .when-collapsed {
+        display: none !important;
+    }
+
+    [data-bs-toggle="collapse"][aria-expanded="false"] .when-expanded {
+        display: inline !important;
+    }
+</style>
+
+<script>
+
+    function beep(duration = 200, frequency = 440, volume = 1, type = 'sine') {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.type = type;       // sine, square, sawtooth, triangle
+        oscillator.frequency.value = frequency;
+        gainNode.gain.value = volume;
+
+        oscillator.start();
+        setTimeout(() => {
+            oscillator.stop();
+            audioCtx.close();
+        }, duration);
+    }
+
+</script>
+
+@code {
+    private Domain.Entities.Gardens.Garden? _garden;
+    private int _remainingSeconds = 0;
+    private Timer? _timer;
+    int index = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Notifier.Subscribe(SignedUser.UserId, OnJobCompleted);
+        var query = new CreateGardenCommand()
+        {
+            UserId = SignedUser.UserId
+        };
+        _garden = await CreateGardenCommandHandler.Handle(query, CancellationToken.None);
+
+        StartTimer();
+    }
+
+    private async Task OnJobCompleted(string gardenId)
+    {
+        _garden!.CompleteSeed();
+        await JS.InvokeVoidAsync("beep", 300, 600, 1, "sine");
+        await InvokeAsync(StateHasChanged);
+    }
+
+    string GetClass()
+    {
+        var tree = _garden!.Trees.FirstOrDefault(a => a.Index == index);
+        return tree is null ? "" : tree.TreeState.ToString().ToLower();
+    }
+
+    private async Task AddSeedAsync()
+    {
+        var command = new AddSeedCommand()
+        {
+            GardenId = _garden!.Id,
+            GrowthTimeInSeconds = SignedUser.TreeGrowthTimeInSeconds
+        };
+        _garden = await AddSeedCommandHandler.Handle(command, CancellationToken.None);
+        StartTimer();
+    }
+
+    private async Task KillSeedAsync()
+    {
+        var command = new KillSeedCommand
+        {
+            GardenId = _garden!.Id
+        };
+        _garden = await KillSeedCommandHandler.Handle(command, CancellationToken.None);
+    }
+
+    private void StartTimer()
+    {
+        _timer?.Dispose(); // clear old one if any
+        if (_garden?.GardenState != GardenState.GrowingATree) return;
+
+        _remainingSeconds = _garden.RemainingSeconds;
+        _timer = new Timer(_ =>
+        {
+            if (_remainingSeconds > 0)
+            {
+                _remainingSeconds--;
+                InvokeAsync(StateHasChanged);
+            }
+            else
+            {
+                _remainingSeconds = 0;
+                _timer?.Dispose();
+            }
+        }, null, 1000, 1000);
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
+        Notifier.Unsubscribe(SignedUser.UserId);
+    }
+
+}

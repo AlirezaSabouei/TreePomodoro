@@ -14,7 +14,7 @@ public class CompleteSeedCommandHandler(
     IRequestHandler<UpdateGardenCommand, Garden> updateGardenHandler)
     : IRequestHandler<CompleteSeedCommand, Garden>
 {
-    private Garden _garden;
+    private Garden? _garden;
     
     public async Task<Garden> Handle(CompleteSeedCommand request, CancellationToken cancellationToken)
     {
@@ -34,12 +34,12 @@ public class CompleteSeedCommandHandler(
         return garden;
     }
     
-    private Task<Garden> UpdateGardenAsync(CancellationToken cancellationToken)
+    private async Task<Garden> UpdateGardenAsync(CancellationToken cancellationToken)
     {
         var updateCommand = new UpdateGardenCommand
         {
-            Garden = _garden
+            Garden = _garden!
         };
-        return updateGardenHandler.Handle(updateCommand, cancellationToken);
+        return await updateGardenHandler.Handle(updateCommand, cancellationToken);
     }
 }

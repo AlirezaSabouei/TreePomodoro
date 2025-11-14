@@ -884,6 +884,20 @@ html:not(.layout-menu-collapsed) .bg-menu-theme .menu-inner .menu-item .menu-lin
     min-height: 150px;       /* optional: spinner area height */
 }
 
+.collapse.show ~ button .collapsed-show,
+.collapse:not(.show) ~ button .collapsed-hide {
+    display: none;
+}
+
+/* Alternative: using collapse state on button */
+[data-bs-toggle="collapse"][aria-expanded="true"] .collapsed-show {
+    display: none;
+}
+
+[data-bs-toggle="collapse"][aria-expanded="false"] .collapsed-hide {
+    display: none;
+}
+
 #water-container ul {
     padding-left: 0;
     margin-top: 10px;
@@ -934,4 +948,12 @@ html:not(.layout-menu-collapsed) .bg-menu-theme .menu-inner .menu-item .menu-lin
     margin-top: -27px;
     margin-left: -17px;
     margin-right: -17px;
+}
+
+.tasks .task-column{
+    min-height: 100%;
+}
+
+.tasks .card-header {
+    padding: 0.75rem 1.5rem;
 }

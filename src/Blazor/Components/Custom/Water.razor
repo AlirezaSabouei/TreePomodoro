@@ -50,22 +50,6 @@
     </div>
 </div>
 
-<style>
-    .collapse.show ~ button .collapsed-show,
-    .collapse:not(.show) ~ button .collapsed-hide {
-        display: none;
-    }
-
-    /* Alternative: using collapse state on button */
-    [data-bs-toggle="collapse"][aria-expanded="true"] .collapsed-show {
-        display: none;
-    }
-
-    [data-bs-toggle="collapse"][aria-expanded="false"] .collapsed-hide {
-        display: none;
-    }
-</style>
-
 @code {
     private List<Glass>? _glasses;
 

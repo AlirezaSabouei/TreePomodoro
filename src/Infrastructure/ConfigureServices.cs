@@ -76,7 +76,7 @@ public static class ConfigureServices
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
         
         //token service configuration
-        services.AddScoped<ITokenService, TokenService>();
+        //services.AddScoped<ITokenService, TokenService>();
     }
     
     public static void UseInfrastructureServices(this IHost app)

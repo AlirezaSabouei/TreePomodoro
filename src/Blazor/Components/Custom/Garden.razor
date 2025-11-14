@@ -22,8 +22,8 @@
                     aria-expanded="true"
                     aria-controls="gardenContent"
                     style="z-index: 10;">
-                <span class="when-expanded">▼</span>
-                <span class="when-collapsed" style="display: none;">▲</span>
+                <span class="collapsed-show">▼</span>
+                <span class="collapsed-hide">▲</span>
             </button>
 
             @if (_garden == null)
@@ -93,24 +93,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    [data-bs-toggle="collapse"][aria-expanded="true"] .when-collapsed {
-        display: inline !important;
-    }
-
-    [data-bs-toggle="collapse"][aria-expanded="true"] .when-expanded {
-        display: none !important;
-    }
-
-    [data-bs-toggle="collapse"][aria-expanded="false"] .when-collapsed {
-        display: none !important;
-    }
-
-    [data-bs-toggle="collapse"][aria-expanded="false"] .when-expanded {
-        display: inline !important;
-    }
-</style>
 
 <script>
 

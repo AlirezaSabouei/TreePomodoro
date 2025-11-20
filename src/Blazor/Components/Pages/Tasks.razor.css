@@ -1,0 +1,7 @@
+.tasks .task-column{
+    min-height: 100%;
+}
+
+.tasks .card-header {
+    padding: 0.75rem 1.5rem;
+}

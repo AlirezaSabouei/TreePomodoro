@@ -52,18 +52,13 @@
                         @{
                             index = 0;
                         }
-                        @for (var i = 0; i < 5; i++)
+                        @for (int i = 0; i < 5; i++)
                         {
                             <tr>
-                                @for (var j = 0; j < 5; j++)
+                                @for (int j = 0; j < 5; j++)
                                 {
-                                    var treeType = GetClass();
-                                    <td class="@treeType">
-                                        @if (treeType == "seed")
-                                        {
-                                            <span>@($"{_remainingSeconds / 60:D2}:{_remainingSeconds % 60:D2}")</span>
-                                        }
-                                    </td>
+                                    string? treeType = GetClass();
+                                    <td class="@treeType"></td>
                                     index++;
                                 }
                             </tr>
@@ -81,9 +76,11 @@
                     }
                     else if (_garden?.GardenState == GardenState.GrowingATree)
                     {
-                        <div class="text-center">
+                        <div class="text-center">       
                             <button @onclick="KillSeedAsync" type="button" class="btn btn-warning">
-                                Cancel Planting!
+                                <span>@(textContent: $"{_remainingSeconds / 60:D2}:{_remainingSeconds % 60:D2}")</span>
+                                @* <br /> *@
+                                / <b>Cancel Planting!</b>
                             </button>
                         </div>
                     }

@@ -1,0 +1,77 @@
+#garden{
+    background-color: whitesmoke;
+    color: #004d40;
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+#garden td{
+    text-align: center;
+    vertical-align: middle;
+    width: 60px;
+    height: 60px;
+}
+
+#garden td img{
+    margin: 0 auto;
+    width: 30px;
+    height: 30px;
+}
+
+#garden .dry{
+    background-color: wheat;
+    background-image: url('/assets/img/dead-tree.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 40%;
+}
+
+#garden .green{
+    background-color: lightgreen;
+    background-image: url('/assets/img/adult-tree.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 40%;
+}
+
+#garden .seed{
+    background-color: #ffcd39;
+    background-image: url('/assets/img/seed-tree.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 30%;
+}
+
+#garden span{
+    position: relative;
+    top: 44%;
+    text-align: center;
+    font-size: x-small;
+    color: black;
+}
+
+.stages{
+    margin-top: 20px;
+    text-align: center;
+}
+
+.stages button{
+    margin-top: 40px;
+}
+
+.badge-success{
+    background-color: #198754 ;
+    margin-left: 5px;
+}
+
+#btnPlant{
+    width: 100%;
+}
+
+.seed span{
+    margin-top: -27px;
+    margin-left: -17px;
+    margin-right: -17px;
+}

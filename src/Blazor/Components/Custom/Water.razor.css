@@ -1,0 +1,45 @@
+#water-container ul {
+    padding-left: 0;
+    margin-top: 10px;
+}
+
+#water-container ul li{
+    display: inline-block;
+    border: 2px dashed lightgray;
+    border-radius: 5px;
+    background-color: whitesmoke;
+    font-size: xx-large;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    padding: 10px 5px;
+    background-image: url('/assets/img/water-glass.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    width: 50px;
+    height: 60px;
+    text-align: center;
+}
+
+#water-container ul li:hover{
+    cursor: pointer;
+    background-image: url('/assets/img/clear.png');
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#water-container ul .add-water{
+    cursor: pointer;
+    width: 54px;
+    text-align: center;
+    background-image: url('/assets/img/plus.png');
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#water-container ul .add-water:hover{
+    background-image: url('/assets/img/plus.png');
+    border: 2px dashed orange;
+}
